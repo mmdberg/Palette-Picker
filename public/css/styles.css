@@ -1,3 +1,27 @@
 h1 {
   color: blue;
+  text-align: center
+}
+
+header {
+  height: 100px;
+}
+
+.new-palette-button {
+  width: 100px;
+  color: aqua;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.colors {
+  display: flex;
+  height: 200px;
+}
+
+.box {
+  border: black 1px dashed;
+  background-color: magenta;
+  width: 20%;
 }
