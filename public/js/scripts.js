@@ -1,6 +1,8 @@
 
 const randomColorGenerator = () => {
 
+  $('.drop-shadow').css('visibility', 'initial')
+
   if(!$('.box1').hasClass('locked')) {
     var randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box1').css('background-color', randomColor1)

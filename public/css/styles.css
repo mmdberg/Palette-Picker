@@ -1,5 +1,6 @@
 body {
   font-family: 'Do Hyeon', sans-serif;
+  background-color: #797684;
 }
 
 h1 {
@@ -12,17 +13,24 @@ header {
 }
 
 .new-palette-button {
-  width: 100px;
-  color: aqua;
+  width: 180px;
+  color: blue;
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
+  border: 1px black solid;
+  background-color: #ffffff8a;
+  border-radius: 50px;
 }
 
-img {
-  height: 100px;
-  width: 100px;
+.new-palette-button:hover {
+  background-color: #FFF;
 }
+
+.new-palette-button:focus {
+  outline: 0
+}
+
 
 .lock-button {
   position: relative;
@@ -33,14 +41,27 @@ img {
   border: none;
   height: 17px;
   left: 50%;
-  top: 120px;
+  top: 85px;
   transform: translate(-50%, -50%);
+}
+
+.drop-shadow {
+  position: relative;
+  left: 50%;
+  top: 150px;
+  transform: translate(-50%, -50%);
+  background: #d4d4d42e;
+  visibility: hidden;
+  width: 50px;
+  height: 45px;
+  border-radius: 50px;
+  z-index: 1;
 }
 
 .color-label {
   text-align: center;
   position: relative;
-  top: 143px;
+  top: 105px;
   font-size: 10px;
   margin: 0
 }
@@ -57,6 +78,13 @@ img {
   height: 180px;
   width: 180px;
   border-radius: 50%;
+  border: 1px white solid;
+  z-index: -1;
+}
+
+hr {
+  height: 1px;
+  margin: 20px
 }
 
 .save-palette, 
