@@ -53,12 +53,41 @@ const randomColorGenerator = () => {
 }
 
 const handleLock = (num) => {
-  $(`.box${num}`).addClass('locked')
+  $(`.box${num}`).toggleClass('locked')
 }
 
+const savePalette = () => {
+  console.log($('.palette-name-input').val())
+}
+
+const saveProject = async () => {
+  const project = ($('.project-name-input').val())
+  const response = await fetch('/api/v1/projects', {
+    method: 'POST',
+    body: {
+      project
+    }
+  })
+}
+
+const loadProjects = async () => {
+  console.log('gimme projects')
+  try {
+    const response = await fetch('/api/v1/projects')
+    console.log('response', response)
+    const projects = await response.json()
+    console.log('projects', projects)
+  } catch (error) {
+    console.log('error', error);
+  }
+}
+
+loadProjects()
 $('.new-palette-button').click(randomColorGenerator)
-$('.lock-button1').click(() => handleLock(1))
-$('.lock-button2').click(() => handleLock(2))
-$('.lock-button3').click(() => handleLock(3))
-$('.lock-button4').click(() => handleLock(4))
-$('.lock-button5').click(() => handleLock(5))
+$('.drop-shadow1').click(() => handleLock(1))
+$('.drop-shadow2').click(() => handleLock(2))
+$('.drop-shadow3').click(() => handleLock(3))
+$('.drop-shadow4').click(() => handleLock(4))
+$('.drop-shadow5').click(() => handleLock(5))
+$('.save-palette-button').click(savePalette)
+$('.save-project-button').click(saveProject)

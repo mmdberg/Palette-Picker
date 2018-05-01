@@ -4,7 +4,7 @@ body {
 }
 
 h1 {
-  color: blue;
+  color: #ffffff8a;
   text-align: center
 }
 
@@ -18,7 +18,6 @@ header {
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: 1px black solid;
   background-color: #ffffff8a;
   border-radius: 50px;
 }
@@ -79,7 +78,11 @@ header {
   width: 180px;
   border-radius: 50%;
   border: 1px white solid;
-  z-index: -1;
+/*  z-index: -1;*/
+}
+
+.locked {
+  box-shadow: 0px 0px 5px 1px white;
 }
 
 hr {
