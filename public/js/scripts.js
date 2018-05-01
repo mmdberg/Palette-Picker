@@ -61,13 +61,19 @@ const savePalette = () => {
 }
 
 const saveProject = async () => {
-  const project = ($('.project-name-input').val())
+  const projectName = ($('.project-name-input').val())
   const response = await fetch('/api/v1/projects', {
     method: 'POST',
-    body: {
-      project
+    body: JSON.stringify({
+      title: projectName
+    }),
+    headers: {
+      'Content-Type': 'application/json'
     }
   })
+  const projectResponse = await response.json()
+  const projectID = projectResponse.id
+  console.log(projectID)
 }
 
 const loadProjects = async () => {
@@ -76,9 +82,7 @@ const loadProjects = async () => {
     const response = await fetch('/api/v1/projects')
     console.log('response', response)
     const projects = await response.json()
-    console.log('projects', projects)
   } catch (error) {
-    console.log('error', error);
   }
 }
 
