@@ -3,11 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <title>Palette Picker</title>
+  <link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <h1>Hello world, this is palette picker</h1>
+  <header>
+    <h1>Palette Picker</h1>
+    <button class="new-palette-button">Generate palette, please</button>
+  </header>
+  <section class="colors">
+    <div class="box box1">
+      <div class="drop-shadow drop-shadow1">
+      </div>
+        <p class="color1 color-label"></p>
+        <button class="lock-button lock-button1"></button>
+    </div>
+    <div class="box box2">
+      <div class="drop-shadow drop-shadow2">
+      </div>
+        <p class="color2 color-label"></p>
+        <button class="lock-button lock-button2"></button>
+    </div>
+    <div class="box box3">
+      <div class="drop-shadow drop-shadow3">
+      </div>
+        <p class="color3 color-label"></p>
+        <button class="lock-button lock-button3"></button>
+    </div>
+    <div class="box box4">
+      <div class="drop-shadow drop-shadow4">
+      </div>
+        <p class="color4 color-label"></p>
+        <button class="lock-button lock-button4"></button>
+    </div>
+    <div class="box box5">
+      <div class="drop-shadow drop-shadow5">
+      </div>
+        <p class="color5 color-label"></p>
+        <button class="lock-button lock-button5"></button>
+    </div>
+  </section>
+  <section class="save-palette">
+    <select name="project-options">
+      <option value="Project1">Project 1</option>
+      <option value="Project2">Project 2</option>
+    </select>
+    <input class="palette-name-input" type="text" placeholder="Palette name">
+    <button class="save-palette-button">Save Palette</button>
+  </section>
+  <hr/>
+  <section class="projects">
+    <p>Create a new project</p>
+    <input class="project-name-input" type="text" placeholder="New project name">
+    <button class="save-project-button">Save Project</button>
+  </section>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="/js/scripts.js"></script>
-  
 </body>
 </html>

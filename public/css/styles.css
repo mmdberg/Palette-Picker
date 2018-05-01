@@ -1,3 +1,96 @@
+body {
+  font-family: 'Do Hyeon', sans-serif;
+  background-color: #797684;
+}
+
 h1 {
+  color: #ffffff8a;
+  text-align: center
+}
+
+header {
+  height: 100px;
+}
+
+.new-palette-button {
+  width: 180px;
   color: blue;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff8a;
+  border-radius: 50px;
+}
+
+.new-palette-button:hover {
+  background-color: #FFF;
+}
+
+.new-palette-button:focus {
+  outline: 0
+}
+
+
+.lock-button {
+  position: relative;
+  background-color: black;
+  background-image: url('./images/lock.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: none;
+  height: 17px;
+  left: 50%;
+  top: 85px;
+  transform: translate(-50%, -50%);
+}
+
+.drop-shadow {
+  position: relative;
+  left: 50%;
+  top: 150px;
+  transform: translate(-50%, -50%);
+  background: #d4d4d42e;
+  visibility: hidden;
+  width: 50px;
+  height: 45px;
+  border-radius: 50px;
+  z-index: 1;
+}
+
+.color-label {
+  text-align: center;
+  position: relative;
+  top: 105px;
+  font-size: 10px;
+  margin: 0
+}
+
+.colors {
+  display: flex;
+  height: 200px;
+  justify-content: space-between;
+}
+
+.box {
+  border: black 1px dashed;
+  background-color: black;
+  height: 180px;
+  width: 180px;
+  border-radius: 50%;
+  border: 1px white solid;
+/*  z-index: -1;*/
+}
+
+.locked {
+  box-shadow: 0px 0px 5px 1px white;
+}
+
+hr {
+  height: 1px;
+  margin: 20px
+}
+
+.save-palette, 
+.projects {
+  text-align: center;
 }
