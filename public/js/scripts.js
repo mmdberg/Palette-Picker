@@ -73,16 +73,36 @@ const saveProject = async () => {
   })
   const projectResponse = await response.json()
   const projectID = projectResponse.id
-  console.log(projectID)
+}
+
+const getPalettes = async (id) => {
+  try {
+    const response = await fetch(`/api/v1/palettes/${id}`)
+    const palettes = await response.json()
+    return palettes
+  } catch (error) {
+    console.log('getPalettes error:', error)
+  }
+}
+
+const makeArray = (projects) => {
+  const projectArray = projects.map(async project => {
+    const colors = await getPalettes(project.id)
+    const projectObject = {colors, title: project.title}
+    return projectObject
+  })
+  return Promise.all(projectArray)
 }
 
 const loadProjects = async () => {
-  console.log('gimme projects')
   try {
     const response = await fetch('/api/v1/projects')
-    console.log('response', response)
     const projects = await response.json()
+    const projectArray = await makeArray(projects)
+    console.log('projectArray', projectArray);
+    return projectArray
   } catch (error) {
+    console.log('loadProjects error:', error)
   }
 }
 
