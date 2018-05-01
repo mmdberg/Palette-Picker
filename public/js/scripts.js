@@ -1,23 +1,62 @@
 
 const randomColorGenerator = () => {
 
-  var randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
-  $('.box1').css('background-color', randomColor1)
+  if(!$('.box1').hasClass('locked')) {
+    var randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    $('.box1').css('background-color', randomColor1)
+    $('.lock-button1').css('background-color', randomColor1)
+    $('.color1').text(randomColor1)
+  } else {
+    randomColor1 = $('.color1').text()
+  }
 
-  var randomColor2 = '#' + Math.floor(Math.random()*16777215).toString(16);
-  $('.box2').css('background-color', randomColor2)
+  if(!$('.box2').hasClass('locked')) {
+    var randomColor2 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    $('.box2').css('background-color', randomColor2)
+    $('.lock-button2').css('background-color', randomColor2)
+    $('.color2').text(randomColor2)
+  } else {
+    randomColor2 = $('.color2').text()
+  }
 
-  var randomColor3 = '#' + Math.floor(Math.random()*16777215).toString(16);
-  $('.box3').css('background-color', randomColor3)
+  if(!$('.box3').hasClass('locked')) {
+    var randomColor3 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    $('.box3').css('background-color', randomColor3)
+    $('.lock-button3').css('background-color', randomColor3)
+    $('.color3').text(randomColor3)
+  } else {
+    randomColor3 = $('.color3').text()
+  }
 
-  var randomColor4 = '#' + Math.floor(Math.random()*16777215).toString(16);
-  $('.box4').css('background-color', randomColor4)
+  if(!$('.box4').hasClass('locked')) {
+    var randomColor4 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    $('.box4').css('background-color', randomColor4)
+    $('.lock-button4').css('background-color', randomColor4)
+    $('.color4').text(randomColor4)
+  } else {
+    randomColor4 = $('.color4').text()
+  }
 
-  var randomColor5 = '#' + Math.floor(Math.random()*16777215).toString(16);
-  $('.box5').css('background-color', randomColor5)
+  if(!$('.box5').hasClass('locked')) {
+    var randomColor5 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    $('.box5').css('background-color', randomColor5)
+    $('.lock-button5').css('background-color', randomColor5)
+    $('.color5').text(randomColor5)
+  } else {
+    randomColor4 = $('.color5').text()
+  }
 
   const colorArray = [randomColor1, randomColor2, randomColor3, randomColor4, randomColor5]
   console.log(colorArray);
 }
 
+const handleLock = (num) => {
+  $(`.box${num}`).addClass('locked')
+}
+
 $('.new-palette-button').click(randomColorGenerator)
+$('.lock-button1').click(() => handleLock(1))
+$('.lock-button2').click(() => handleLock(2))
+$('.lock-button3').click(() => handleLock(3))
+$('.lock-button4').click(() => handleLock(4))
+$('.lock-button5').click(() => handleLock(5))
