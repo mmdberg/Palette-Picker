@@ -50,10 +50,13 @@ const randomColorGenerator = () => {
     $('.lock-button5').css('background-color', randomColor5)
     $('.color5').text(randomColor5)
   } else {
-    randomColor4 = $('.color5').text()
+    randomColor5 = $('.color5').text()
   }
 
   const colorArray = [randomColor1, randomColor2, randomColor3, randomColor4, randomColor5]
+  colorArray.forEach(color => {
+
+  })
   console.log(colorArray);
 }
 
@@ -85,11 +88,11 @@ const savePalette = async () => {
   $(`#${project_id}`).after(
   `<article class="palette-list">
     <p>${paletteName}</p>
-    <div class="palette-swatch" style='background-color:${randomColor1}''></div>
-    <div class="palette-swatch" style='background-color:${randomColor2}''></div>
-    <div class="palette-swatch" style='background-color:${randomColor3}''></div>
-    <div class="palette-swatch" style='background-color:${randomColor4}''></div>
-    <div class="palette-swatch" style='background-color:${randomColor5}''></div>
+    <div class="palette-swatch swatchColor1" style='background-color:${randomColor1}''></div>
+    <div class="palette-swatch swatchColor2" style='background-color:${randomColor2}''></div>
+    <div class="palette-swatch swatchColor3" style='background-color:${randomColor3}''></div>
+    <div class="palette-swatch swatchColor4" style='background-color:${randomColor4}''></div>
+    <div class="palette-swatch swatchColor5" style='background-color:${randomColor5}''></div>
   </article>`)
 }
 
@@ -165,11 +168,11 @@ const showProjects = (projectArray) => {
       $('.project-list').append(
         `<article class="palette-list">
           <p>${palette.title}</p>
-          <div class="palette-swatch" style='background-color:${palette.color1}''></div>
-          <div class="palette-swatch" style='background-color:${palette.color2}''></div>
-          <div class="palette-swatch" style='background-color:${palette.color3}''></div>
-          <div class="palette-swatch" style='background-color:${palette.color4}''></div>
-          <div class="palette-swatch" style='background-color:${palette.color5}''></div>
+          <div class="palette-swatch swatchColor1" id='${palette.color1}' style='background-color:${palette.color1}''></div>
+          <div class="palette-swatch swatchColor2" id='${palette.color2}' style='background-color:${palette.color2}''></div>
+          <div class="palette-swatch swatchColor3" id='${palette.color3}' style='background-color:${palette.color3}''></div>
+          <div class="palette-swatch swatchColor4" id='${palette.color4}' style='background-color:${palette.color4}''></div>
+          <div class="palette-swatch swatchColor5" id='${palette.color5}' style='background-color:${palette.color5}''></div>
         </article>`))
     } else {
       $('.project-list').append(`<h4>${project.title}</h4>
@@ -192,6 +195,37 @@ const loadProjects = async () => {
   }
 }
 
+const displaySavedPalette = (event) => {
+  const palette = (event.target.closest('article'))
+  const color1 = ($(palette).find('.swatchColor1').attr('id'))
+  $('.box1').css('background-color', color1)
+  $('.lock-button1').css('background-color', color1)
+  $('.color1').text(color1)
+
+  const color2 = ($(palette).find('.swatchColor2').attr('id'))
+  //const color1 = convertRGBtoHex(color1RGB)
+  $('.box2').css('background-color', color2)
+  $('.lock-button2').css('background-color', color2)
+  $('.color2').text(color2)
+
+  const color3 = ($(palette).find('.swatchColor3').attr('id'))
+  $('.box3').css('background-color', color3)
+  $('.lock-button3').css('background-color', color3)
+  $('.color3').text(color3)
+
+  const color4 = ($(palette).find('.swatchColor4').attr('id'))
+  $('.box4').css('background-color', color4)
+  $('.lock-button4').css('background-color', color4)
+  $('.color4').text(color4)
+
+  const color5 = ($(palette).find('.swatchColor5').attr('id'))
+  $('.box5').css('background-color', color5)
+  $('.lock-button5').css('background-color', color5)
+  $('.color5').text(color5)
+
+  let colorArray = [color1, color2, color3, color4, color5]
+}
+
 loadProjects()
 $('.new-palette-button').click(randomColorGenerator)
 $('.drop-shadow1').click(() => handleLock(1))
@@ -201,3 +235,7 @@ $('.drop-shadow4').click(() => handleLock(4))
 $('.drop-shadow5').click(() => handleLock(5))
 $('.save-palette-button').click(savePalette)
 $('.save-project-button').click(saveProject)
+$(this).click(() => displaySavedPalette(event))
+
+
+
