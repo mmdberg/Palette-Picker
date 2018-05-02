@@ -1,10 +1,15 @@
+var randomColor1;
+var randomColor2;
+var randomColor3;
+var randomColor4;
+var randomColor5;
 
 const randomColorGenerator = () => {
 
   $('.drop-shadow').css('visibility', 'initial')
 
   if(!$('.box1').hasClass('locked')) {
-    var randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box1').css('background-color', randomColor1)
     $('.lock-button1').css('background-color', randomColor1)
     $('.color1').text(randomColor1)
@@ -13,7 +18,7 @@ const randomColorGenerator = () => {
   }
 
   if(!$('.box2').hasClass('locked')) {
-    var randomColor2 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor2 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box2').css('background-color', randomColor2)
     $('.lock-button2').css('background-color', randomColor2)
     $('.color2').text(randomColor2)
@@ -22,7 +27,7 @@ const randomColorGenerator = () => {
   }
 
   if(!$('.box3').hasClass('locked')) {
-    var randomColor3 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor3 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box3').css('background-color', randomColor3)
     $('.lock-button3').css('background-color', randomColor3)
     $('.color3').text(randomColor3)
@@ -31,7 +36,7 @@ const randomColorGenerator = () => {
   }
 
   if(!$('.box4').hasClass('locked')) {
-    var randomColor4 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor4 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box4').css('background-color', randomColor4)
     $('.lock-button4').css('background-color', randomColor4)
     $('.color4').text(randomColor4)
@@ -40,7 +45,7 @@ const randomColorGenerator = () => {
   }
 
   if(!$('.box5').hasClass('locked')) {
-    var randomColor5 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor5 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box5').css('background-color', randomColor5)
     $('.lock-button5').css('background-color', randomColor5)
     $('.color5').text(randomColor5)
@@ -56,29 +61,115 @@ const handleLock = (num) => {
   $(`.box${num}`).toggleClass('locked')
 }
 
-const savePalette = () => {
-  console.log($('.palette-name-input').val())
+const savePalette = async () => {
+  const paletteName = ($('.palette-name-input').val())
+  const project_id = ($('.project-options').val())
+  console.log(project_id)
+  const response = await fetch('/api/v1/palettes', {
+    method: 'POST',
+    body: JSON.stringify({
+      title: paletteName,
+      color1: randomColor1,
+      color2: randomColor2,
+      color3: randomColor3,
+      color4: randomColor4,
+      color5: randomColor5,
+      project_id
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const paletteResponse = await response.json()
+  const paletteID = paletteResponse.id
+  console.log(paletteID)
+  $(`#${project_id}`).after(
+  `<article class="palette-list">
+    <p>${paletteName}</p>
+    <div class="palette-swatch" style='background-color:${randomColor1}''></div>
+    <div class="palette-swatch" style='background-color:${randomColor2}''></div>
+    <div class="palette-swatch" style='background-color:${randomColor3}''></div>
+    <div class="palette-swatch" style='background-color:${randomColor4}''></div>
+    <div class="palette-swatch" style='background-color:${randomColor5}''></div>
+  </article>`)
 }
 
 const saveProject = async () => {
-  const project = ($('.project-name-input').val())
+  const projectName = ($('.project-name-input').val())
   const response = await fetch('/api/v1/projects', {
     method: 'POST',
-    body: {
-      project
+    body: JSON.stringify({
+      title: projectName
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const projectResponse = await response.json()
+  const projectID = projectResponse.id
+  $('.project-list').append(`<h4>${projectName}<h4>
+    <p class="no-palettes-saved">No palattes saved for this project<p>`)
+  $('.project-options').append(`<option value="${projectID}">${projectName}</option>`)
+}
+
+const getPalettes = async (id) => {
+  try {
+    const response = await fetch(`/api/v1/palettes/${id}`)
+    const palettes = await response.json()
+    return palettes
+  } catch (error) {
+    console.log('getPalettes error:', error)
+  }
+}
+
+const makeArray = (projects) => {
+  const projectArray = projects.map(async project => {
+    const colors = await getPalettes(project.id)
+    const projectObject = {colors, title: project.title, id: project.id}
+    return projectObject
+  })
+  return Promise.all(projectArray)
+}
+
+const makeDropdown = (projectArray) => {
+  projectArray.forEach(project => {
+    console.log('project:', project)
+    $('.project-options').append(`<option value="${project.id}">${project.title}</option>`)
+  })
+}
+
+const showProjects = (projectArray) => {
+  projectArray.forEach(project => {
+    if (project.colors.length > 1) { 
+      $('.project-list').append(`<h4 id="${project.id}">${project.title}</h4>`)
+      project.colors.forEach(palette =>   
+      $('.project-list').append(
+        `<article class="palette-list">
+          <p>${palette.title}</p>
+          <div class="palette-swatch" style='background-color:${palette.color1}''></div>
+          <div class="palette-swatch" style='background-color:${palette.color2}''></div>
+          <div class="palette-swatch" style='background-color:${palette.color3}''></div>
+          <div class="palette-swatch" style='background-color:${palette.color4}''></div>
+          <div class="palette-swatch" style='background-color:${palette.color5}''></div>
+        </article>`))
+    } else {
+      $('.project-list').append(`<h4>${project.title}</h4>
+        <p class="no-palettes-saved">No palattes saved for this project<p>`)
     }
   })
 }
 
 const loadProjects = async () => {
-  console.log('gimme projects')
   try {
     const response = await fetch('/api/v1/projects')
-    console.log('response', response)
     const projects = await response.json()
-    console.log('projects', projects)
+    const projectArray = await makeArray(projects)
+    console.log('projectArray', projectArray);
+    makeDropdown(projectArray)
+    showProjects(projectArray)
+    return projectArray
   } catch (error) {
-    console.log('error', error);
+    console.log('loadProjects error:', error)
   }
 }
 
