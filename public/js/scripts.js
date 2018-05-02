@@ -95,29 +95,33 @@ const savePalette = async () => {
 
 const saveProject = async () => {
   const projectName = ($('.project-name-input').val())
-  const response = await fetch('/api/v1/projects')
-  const projects = await response.json()
-  const projectMatch = projects.find(project => project.title === projectName)
-  if (projectMatch) {
-    $('.save-project-button').after('<p class="project-match">That project name already exists</p>')
-  } else {
-    $('.project-match').remove()
-    const response = await fetch('/api/v1/projects', {
-      method: 'POST',
-      body: JSON.stringify({
-        title: projectName
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    const projectResponse = await response.json()
-    const projectID = projectResponse.id
-    $('.project-list').append(`<h4>${projectName}<h4>
-      <p class="no-palettes-saved">No palattes saved for this project<p>`)
-    $('.project-options').append(`<option value="${projectID}">${projectName}</option>`)
+  try { 
+    const response = await fetch('/api/v1/projects')
+    const projects = await response.json()
+    const projectMatch = projects.find(project => project.title === projectName)
+    if (projectMatch) {
+      $('.save-project-button').after('<p class="project-match">That project name already exists</p>')
+    } else {
+      $('.project-match').remove()
+      const response = await fetch('/api/v1/projects', {
+        method: 'POST',
+        body: JSON.stringify({
+          title: projectName
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const projectResponse = await response.json()
+      const projectID = projectResponse.id
+      $('.project-list').append(`<h4>${projectName}<h4>
+        <p class="no-palettes-saved">No palattes saved for this project<p>`)
+      $('.project-options').append(`<option value="${projectID}">${projectName}</option>`)
+    }
+    ($('.project-name-input').val(''))
+  } catch (error) {
+    console.log('project match test error:', error)
   }
-  ($('.project-name-input').val(''))
 }
 
 const getPalettes = async (id) => {
