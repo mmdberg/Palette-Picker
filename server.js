@@ -73,6 +73,24 @@ app.post('/api/v1/projects', (request, response) => {
 })
 
 //post new palette to project
+app.post('/api/v1/palettes', (request, response) => {
+  const palette = request.body;
+  console.log(palette)
+
+  if(!palette) {
+    return response.status(422).send({
+      error: 'No palette name provided'
+    })
+  } else {
+    database('palettes').insert(palette, 'id')
+      .then(palette => {
+        response.status(200).json({ id: palette[0] })
+      })
+      .catch(error => {
+        response.status(500).json({ error })
+      })
+  }
+})
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}`)

@@ -1,10 +1,15 @@
+var randomColor1;
+var randomColor2;
+var randomColor3;
+var randomColor4;
+var randomColor5;
 
 const randomColorGenerator = () => {
 
   $('.drop-shadow').css('visibility', 'initial')
 
   if(!$('.box1').hasClass('locked')) {
-    var randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box1').css('background-color', randomColor1)
     $('.lock-button1').css('background-color', randomColor1)
     $('.color1').text(randomColor1)
@@ -13,7 +18,7 @@ const randomColorGenerator = () => {
   }
 
   if(!$('.box2').hasClass('locked')) {
-    var randomColor2 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor2 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box2').css('background-color', randomColor2)
     $('.lock-button2').css('background-color', randomColor2)
     $('.color2').text(randomColor2)
@@ -22,7 +27,7 @@ const randomColorGenerator = () => {
   }
 
   if(!$('.box3').hasClass('locked')) {
-    var randomColor3 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor3 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box3').css('background-color', randomColor3)
     $('.lock-button3').css('background-color', randomColor3)
     $('.color3').text(randomColor3)
@@ -31,7 +36,7 @@ const randomColorGenerator = () => {
   }
 
   if(!$('.box4').hasClass('locked')) {
-    var randomColor4 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor4 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box4').css('background-color', randomColor4)
     $('.lock-button4').css('background-color', randomColor4)
     $('.color4').text(randomColor4)
@@ -40,7 +45,7 @@ const randomColorGenerator = () => {
   }
 
   if(!$('.box5').hasClass('locked')) {
-    var randomColor5 = '#' + Math.floor(Math.random()*16777215).toString(16);
+    randomColor5 = '#' + Math.floor(Math.random()*16777215).toString(16);
     $('.box5').css('background-color', randomColor5)
     $('.lock-button5').css('background-color', randomColor5)
     $('.color5').text(randomColor5)
@@ -56,9 +61,37 @@ const handleLock = (num) => {
   $(`.box${num}`).toggleClass('locked')
 }
 
-const savePalette = () => {
+const savePalette = async () => {
   const paletteName = ($('.palette-name-input').val())
-  const projectName = ($('.project-options').val())
+  const project_id = ($('.project-options').val())
+  console.log(project_id)
+  const response = await fetch('/api/v1/palettes', {
+    method: 'POST',
+    body: JSON.stringify({
+      title: paletteName,
+      color1: randomColor1,
+      color2: randomColor2,
+      color3: randomColor3,
+      color4: randomColor4,
+      color5: randomColor5,
+      project_id
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const paletteResponse = await response.json()
+  const paletteID = paletteResponse.id
+  console.log(paletteID)
+  $(`#${project_id}`).after(
+  `<article class="palette-list">
+    <p>${paletteName}</p>
+    <div class="palette-swatch" style='background-color:${randomColor1}''></div>
+    <div class="palette-swatch" style='background-color:${randomColor2}''></div>
+    <div class="palette-swatch" style='background-color:${randomColor3}''></div>
+    <div class="palette-swatch" style='background-color:${randomColor4}''></div>
+    <div class="palette-swatch" style='background-color:${randomColor5}''></div>
+  </article>`)
 }
 
 const saveProject = async () => {
@@ -74,7 +107,9 @@ const saveProject = async () => {
   })
   const projectResponse = await response.json()
   const projectID = projectResponse.id
-  $('.project-list').append(`<h4>${projectName}<h4>`)
+  $('.project-list').append(`<h4>${projectName}<h4>
+    <p class="no-palettes-saved">No palattes saved for this project<p>`)
+  $('.project-options').append(`<option value="${projectID}">${projectName}</option>`)
 }
 
 const getPalettes = async (id) => {
@@ -99,7 +134,7 @@ const makeArray = (projects) => {
 const makeDropdown = (projectArray) => {
   projectArray.forEach(project => {
     console.log('project:', project)
-    $('.project-options').append(`<option id="${project.id}" value="${project.title}">${project.title}</option>`)
+    $('.project-options').append(`<option value="${project.id}">${project.title}</option>`)
   })
 }
 
@@ -121,9 +156,7 @@ const showProjects = (projectArray) => {
       $('.project-list').append(`<h4>${project.title}</h4>
         <p class="no-palettes-saved">No palattes saved for this project<p>`)
     }
-
   })
-
 }
 
 const loadProjects = async () => {
