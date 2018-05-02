@@ -11,11 +11,6 @@ app.use(express.static('public'))
 
 app.set('port', process.env.PORT || 3000);
 
-// app.use((request, response, next) => {
-//   response.header('Access-Control-Allow-Origin', '*')
-//   next()
-// })
-
 app.locals.title = 'Palette Picker'
 
 app.get('/', (request, response) => {
@@ -36,7 +31,6 @@ app.get('/api/v1/projects', (request, response) => {
 //get palettes for projects
 app.get('/api/v1/palettes/:id', (request, response) => {
   const id = parseInt(request.params.id)
-  console.log(id);
   database('palettes').where('project_id', id).select()
     .then(palettes => {
       if(palettes.length) {
