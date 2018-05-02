@@ -10,12 +10,7 @@ const randomColorGenerator = () => {
     } else {
       colorArray.push($(`.color${i}`).text())
     }
-    
   }
-
-  console.log('colors', colorArray);
-  // numArray.forEach((number, i) => {
-  // })
 
   colorArray.forEach((color, i) => {
     $(`.box${i + 1}`).css('background-color', color)
@@ -28,9 +23,8 @@ const handleLock = (num) => {
   $(`.box${num}`).toggleClass('locked')
 }
 
-const savePalette = async () => {
-  const paletteName = ($('.palette-name-input').val())
-  const project_id = ($('.project-options').val())
+const addPalette = async (paletteName, project_id) => {
+    $('.palette-name-input').val('') 
   const response = await fetch('/api/v1/palettes', {
     method: 'POST',
     body: JSON.stringify({
@@ -47,17 +41,28 @@ const savePalette = async () => {
     }
   })
   const paletteResponse = await response.json()
+  return await paletteResponse
+}
+
+const savePalette =  async () => {
+  const paletteName = ($('.palette-name-input').val())
+
+  const project_id = ($('.project-options').val())
+  const paletteResponse = await addPalette(paletteName, project_id)
+  console.log('paletteResponse', paletteResponse)
   const paletteID = paletteResponse.id
   $(`#${project_id}`).after(
-  `<article class="palette-list">
-    <p>${paletteName}</p>
+  `<article class="palette-list" id=${paletteID}>
+    <p>
+      ${paletteName}
+      <img src="./css/images/trash.svg" class="delete-button">
+    </p>
     <div class="palette-swatch swatchColor1" style='background-color:${colorArray[0]}'></div>
     <div class="palette-swatch swatchColor2" style='background-color:${colorArray[1]}'></div>
     <div class="palette-swatch swatchColor3" style='background-color:${colorArray[2]}'></div>
     <div class="palette-swatch swatchColor4" style='background-color:${colorArray[3]}'></div>
     <div class="palette-swatch swatchColor5" style='background-color:${colorArray[4]}'></div>
   </article>`)
-  ($('.palette-name-input').val('')) 
 }
 
 const addProject = async (projectName) => {
@@ -130,8 +135,11 @@ const showProjects = (projectArray) => {
       $('.project-list').append(`<h4 id="${project.id}">${project.title}</h4>`)
       project.colors.forEach(palette =>   
       $('.project-list').append(
-        `<article class="palette-list">
-          <p>${palette.title}</p>
+        `<article class="palette-list" id=${palette.id}>
+          <p>
+            ${palette.title}
+            <img src="./css/images/trash.svg" class="delete-button">
+          </p>
           <div class="palette-swatch swatchColor1" id='${palette.color1}' style='background-color:${palette.color1}''></div>
           <div class="palette-swatch swatchColor2" id='${palette.color2}' style='background-color:${palette.color2}''></div>
           <div class="palette-swatch swatchColor3" id='${palette.color3}' style='background-color:${palette.color3}''></div>
@@ -176,6 +184,14 @@ const displaySavedPalette = (event) => {
   })
 }
 
+const deletePalette = (event) => {
+  const imgToDelete = (event.target.closest('img'))
+  const articleToDelete = $(imgToDelete).closest('article')
+  const idToDelete = $(articleToDelete).attr('id')
+  $(articleToDelete).remove()
+  console.log(idToDelete);
+}
+
 loadProjects()
 $('.new-palette-button').click(randomColorGenerator)
 $('.drop-shadow1').click(() => handleLock(1))
@@ -186,5 +202,5 @@ $('.drop-shadow5').click(() => handleLock(5))
 $('.save-palette-button').click(savePalette)
 $('.save-project-button').click(saveProject)
 $(this).click(() => displaySavedPalette(event))
-
+$(this).click(() => deletePalette(event))
 
