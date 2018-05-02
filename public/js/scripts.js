@@ -190,6 +190,13 @@ const deletePalette = (event) => {
   const idToDelete = $(articleToDelete).attr('id')
   $(articleToDelete).remove()
   console.log(idToDelete);
+  try {
+    fetch(`/api/v1/palettes/${idToDelete}`, {
+      method: 'DELETE'
+    })
+  } catch (error) {
+    console.log('Unable to delete:', error)
+  }
 }
 
 loadProjects()

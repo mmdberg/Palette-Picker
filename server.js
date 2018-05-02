@@ -86,6 +86,12 @@ app.post('/api/v1/palettes', (request, response) => {
   }
 })
 
+app.delete('/api/v1/palettes/:id', (request, response) => {
+  database('palettes').where('id', request.params.id).del()
+    .then(response => response.sendStatus(204))
+    .catch(error => ({error}))
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}`)
 })
