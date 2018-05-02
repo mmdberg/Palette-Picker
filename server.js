@@ -19,9 +19,10 @@ app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Palette Picker'
 
 app.get('/', (request, response) => {
-
 })
 
+
+//get all projects
 app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
     .then((projects) => {
@@ -32,6 +33,7 @@ app.get('/api/v1/projects', (request, response) => {
     })
 })
 
+//get palettes for projects
 app.get('/api/v1/palettes/:id', (request, response) => {
   const id = parseInt(request.params.id)
   console.log(id);
@@ -50,6 +52,7 @@ app.get('/api/v1/palettes/:id', (request, response) => {
     }) 
 })
 
+//post new project name
 app.post('/api/v1/projects', (request, response) => {
   const project = request.body;
   console.log(project)
@@ -68,6 +71,8 @@ app.post('/api/v1/projects', (request, response) => {
       })
   } 
 })
+
+//post new palette to project
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}`)

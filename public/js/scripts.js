@@ -57,7 +57,8 @@ const handleLock = (num) => {
 }
 
 const savePalette = () => {
-  console.log($('.palette-name-input').val())
+  const paletteName = ($('.palette-name-input').val())
+  const projectName = ($('.project-options').val())
 }
 
 const saveProject = async () => {
@@ -73,6 +74,7 @@ const saveProject = async () => {
   })
   const projectResponse = await response.json()
   const projectID = projectResponse.id
+  $('.project-list').append(`<h4>${projectName}<h4>`)
 }
 
 const getPalettes = async (id) => {
@@ -88,10 +90,40 @@ const getPalettes = async (id) => {
 const makeArray = (projects) => {
   const projectArray = projects.map(async project => {
     const colors = await getPalettes(project.id)
-    const projectObject = {colors, title: project.title}
+    const projectObject = {colors, title: project.title, id: project.id}
     return projectObject
   })
   return Promise.all(projectArray)
+}
+
+const makeDropdown = (projectArray) => {
+  projectArray.forEach(project => {
+    console.log('project:', project)
+    $('.project-options').append(`<option id="${project.id}" value="${project.title}">${project.title}</option>`)
+  })
+}
+
+const showProjects = (projectArray) => {
+  projectArray.forEach(project => {
+    if (project.colors.length > 1) { 
+      $('.project-list').append(`<h4 id="${project.id}">${project.title}</h4>`)
+      project.colors.forEach(palette =>   
+      $('.project-list').append(
+        `<article class="palette-list">
+          <p>${palette.title}</p>
+          <div class="palette-swatch" style='background-color:${palette.color1}''></div>
+          <div class="palette-swatch" style='background-color:${palette.color2}''></div>
+          <div class="palette-swatch" style='background-color:${palette.color3}''></div>
+          <div class="palette-swatch" style='background-color:${palette.color4}''></div>
+          <div class="palette-swatch" style='background-color:${palette.color5}''></div>
+        </article>`))
+    } else {
+      $('.project-list').append(`<h4>${project.title}</h4>
+        <p class="no-palettes-saved">No palattes saved for this project<p>`)
+    }
+
+  })
+
 }
 
 const loadProjects = async () => {
@@ -100,6 +132,8 @@ const loadProjects = async () => {
     const projects = await response.json()
     const projectArray = await makeArray(projects)
     console.log('projectArray', projectArray);
+    makeDropdown(projectArray)
+    showProjects(projectArray)
     return projectArray
   } catch (error) {
     console.log('loadProjects error:', error)
