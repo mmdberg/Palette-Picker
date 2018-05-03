@@ -5,7 +5,7 @@ const randomColorGenerator = () => {
   const numArray = [1, 2, 3, 4, 5]
   colorArray = []
   for(let i = 1; i <= 5; i++) {
-    if(!$(`.box${i}`).hasClass('locked')) {
+    if(!$(`.lock-button${i}`).hasClass('locked')) {
       colorArray.push('#' + Math.floor(Math.random()*16777215).toString(16));
     } else {
       colorArray.push($(`.color${i}`).text())
@@ -14,13 +14,12 @@ const randomColorGenerator = () => {
 
   colorArray.forEach((color, i) => {
     $(`.box${i + 1}`).css('background-color', color)
-    $(`.lock-button${i + 1}`).css('background-color', color)
     $(`.color${i + 1}`).text(color)
   })
 }
 
 const handleLock = (num) => {
-  $(`.box${num}`).toggleClass('locked')
+  $(`.lock-button${num}`).toggleClass('locked')
 }
 
 const addPalette = async (paletteName, project_id) => {
@@ -179,7 +178,6 @@ const displaySavedPalette = (event) => {
 
   colorArray.forEach((color, i) => {
     $(`.box${i + 1}`).css('background-color', color)
-    $(`.lock-button${i + 1}`).css('background-color', color)
     $(`.color${i + 1}`).text(color)
   })
 }
@@ -189,7 +187,6 @@ const deletePalette = (event) => {
   const articleToDelete = $(imgToDelete).closest('article')
   const idToDelete = $(articleToDelete).attr('id')
   $(articleToDelete).remove()
-  console.log(idToDelete);
   try {
     fetch(`/api/v1/palettes/${idToDelete}`, {
       method: 'DELETE'
@@ -200,12 +197,13 @@ const deletePalette = (event) => {
 }
 
 loadProjects()
+randomColorGenerator()
 $('.new-palette-button').click(randomColorGenerator)
-$('.drop-shadow1').click(() => handleLock(1))
-$('.drop-shadow2').click(() => handleLock(2))
-$('.drop-shadow3').click(() => handleLock(3))
-$('.drop-shadow4').click(() => handleLock(4))
-$('.drop-shadow5').click(() => handleLock(5))
+$('.lock-button1').click(() => handleLock(1))
+$('.lock-button2').click(() => handleLock(2))
+$('.lock-button3').click(() => handleLock(3))
+$('.lock-button4').click(() => handleLock(4))
+$('.lock-button5').click(() => handleLock(5))
 $('.save-palette-button').click(savePalette)
 $('.save-project-button').click(saveProject)
 $(this).click(() => displaySavedPalette(event))
