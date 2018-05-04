@@ -46,6 +46,15 @@ const addPalette = async (paletteName, project_id) => {
 const savePalette =  async () => {
   const paletteName = ($('.palette-name-input').val())
   const project_id = ($('.project-options').val())
+  $('.palette-match').remove()
+  if (paletteName === '') {
+    return $('.save-palette-button').after('<p class="palette-match">Please enter a palette name</p>')
+  }
+  // $('.palette-match').remove()
+  if (project_id === 'Pick Project') {
+    return $('.save-palette-button').after('<p class="palette-match">Please enter a project name</p>')
+  }
+  // $('.palette-match').remove()
   $(`.no-palettes${project_id}`).remove();
   const paletteResponse = await addPalette(paletteName, project_id)
   const paletteID = paletteResponse.id
@@ -86,6 +95,10 @@ const addProject = async (projectName) => {
 
 const saveProject = async () => {
   const projectName = ($('.project-name-input').val())
+  if (projectName === '') {
+    return $('.save-project-button').after('<p class="project-match">Please enter a project name</p>')
+  }
+  $('.project-match').remove();
   try { 
     const response = await fetch('/api/v1/projects')
     const projects = await response.json()
