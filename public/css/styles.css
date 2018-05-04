@@ -12,77 +12,101 @@ header {
   height: 100px;
 }
 
-.new-palette-button {
-  width: 180px;
-  color: blue;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #ffffff8a;
+input {
   border-radius: 50px;
 }
 
-.new-palette-button:hover {
+input::placeholder {
+  padding-left: 5px
+}
+
+.new-palette-button {
+  width: 180px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.new-palette-button, 
+.save-palette-button,
+.save-project-button {
+  background-color: #ffffff8a;
+  border-radius: 50px;
+  color: #780479;
+}
+
+.new-palette-button:hover,
+.save-palette-button:hover, 
+.save-project-button:hover {
   background-color: #FFF;
 }
 
-.new-palette-button:focus {
+.new-palette-button:focus,
+.save-palette-button:focus,
+.save-project-button:focus,
+.lock-button,
+select {
   outline: 0
 }
 
-
 .lock-button {
   position: relative;
-  background-color: black;
-  background-image: url('./images/lock.svg');
+  background-color: transparent;
+  background-image: url('./images/unlock.png');
   background-size: contain;
   background-repeat: no-repeat;
   border: none;
-  height: 17px;
+  height: 20px;
+  width: 20px;
   left: 50%;
-  top: 85px;
+  top: 60px;
   transform: translate(-50%, -50%);
+}
+
+.lock-button.locked {
+  background-image: url('./images/lock.png');
 }
 
 .drop-shadow {
   position: relative;
   left: 50%;
-  top: 150px;
+  top: 145px;
   transform: translate(-50%, -50%);
   background: #d4d4d42e;
   visibility: hidden;
-  width: 50px;
-  height: 45px;
+  width: 60px;
+  height: 60px;
   border-radius: 50px;
-  z-index: 1;
 }
 
 .color-label {
   text-align: center;
   position: relative;
-  top: 105px;
-  font-size: 10px;
+  top: 87px;
+  font-size: 13px;
   margin: 0
 }
 
 .colors {
   display: flex;
   height: 200px;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .box {
-  border: black 1px dashed;
   background-color: black;
   height: 180px;
   width: 180px;
   border-radius: 50%;
-  border: 1px white solid;
-/*  z-index: -1;*/
 }
 
-.locked {
-  box-shadow: 0px 0px 5px 1px white;
+.save-palette {
+  position: relative;
+}
+
+select {
+  background-color: #ffffff8a;
+  color: #780479;
 }
 
 hr {
@@ -100,11 +124,12 @@ hr {
   background-color: #4c4958;
   color: white;
   margin: auto;
-  padding: 0 10px;
+  padding: 1px 10px 15px 10px;
 }
 
 h4 {
-  text-decoration: underline
+  text-decoration: underline;
+  margin: 25px;
 }
 
 .palette-list {
@@ -116,12 +141,15 @@ h4 {
 }
 
 .palette-swatch {
-  border: 1px black solid;
   height: 10px;
-/*  width: 10px;*/
-/*  display: inline;*/
 }
 
 .no-palettes-saved {
   font-size: 8px;
+}
+
+.delete-button {
+  height: 11px;
+  width: 10px;
+  vertical-align: text-bottom;
 }

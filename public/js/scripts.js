@@ -1,79 +1,38 @@
-var randomColor1;
-var randomColor2;
-var randomColor3;
-var randomColor4;
-var randomColor5;
+let colorArray = []
 
 const randomColorGenerator = () => {
-
   $('.drop-shadow').css('visibility', 'initial')
-
-  if(!$('.box1').hasClass('locked')) {
-    randomColor1 = '#' + Math.floor(Math.random()*16777215).toString(16);
-    $('.box1').css('background-color', randomColor1)
-    $('.lock-button1').css('background-color', randomColor1)
-    $('.color1').text(randomColor1)
-  } else {
-    randomColor1 = $('.color1').text()
+  const numArray = [1, 2, 3, 4, 5]
+  colorArray = []
+  for(let i = 1; i <= 5; i++) {
+    if(!$(`.lock-button${i}`).hasClass('locked')) {
+      colorArray.push('#' + Math.floor(Math.random()*16777215).toString(16));
+    } else {
+      colorArray.push($(`.color${i}`).text())
+    }
   }
 
-  if(!$('.box2').hasClass('locked')) {
-    randomColor2 = '#' + Math.floor(Math.random()*16777215).toString(16);
-    $('.box2').css('background-color', randomColor2)
-    $('.lock-button2').css('background-color', randomColor2)
-    $('.color2').text(randomColor2)
-  } else {
-    randomColor2 = $('.color2').text()
-  }
-
-  if(!$('.box3').hasClass('locked')) {
-    randomColor3 = '#' + Math.floor(Math.random()*16777215).toString(16);
-    $('.box3').css('background-color', randomColor3)
-    $('.lock-button3').css('background-color', randomColor3)
-    $('.color3').text(randomColor3)
-  } else {
-    randomColor3 = $('.color3').text()
-  }
-
-  if(!$('.box4').hasClass('locked')) {
-    randomColor4 = '#' + Math.floor(Math.random()*16777215).toString(16);
-    $('.box4').css('background-color', randomColor4)
-    $('.lock-button4').css('background-color', randomColor4)
-    $('.color4').text(randomColor4)
-  } else {
-    randomColor4 = $('.color4').text()
-  }
-
-  if(!$('.box5').hasClass('locked')) {
-    randomColor5 = '#' + Math.floor(Math.random()*16777215).toString(16);
-    $('.box5').css('background-color', randomColor5)
-    $('.lock-button5').css('background-color', randomColor5)
-    $('.color5').text(randomColor5)
-  } else {
-    randomColor4 = $('.color5').text()
-  }
-
-  const colorArray = [randomColor1, randomColor2, randomColor3, randomColor4, randomColor5]
-  console.log(colorArray);
+  colorArray.forEach((color, i) => {
+    $(`.box${i + 1}`).css('background-color', color)
+    $(`.color${i + 1}`).text(color)
+  })
 }
 
 const handleLock = (num) => {
-  $(`.box${num}`).toggleClass('locked')
+  $(`.lock-button${num}`).toggleClass('locked')
 }
 
-const savePalette = async () => {
-  const paletteName = ($('.palette-name-input').val())
-  const project_id = ($('.project-options').val())
-  console.log(project_id)
+const addPalette = async (paletteName, project_id) => {
+    $('.palette-name-input').val('') 
   const response = await fetch('/api/v1/palettes', {
     method: 'POST',
     body: JSON.stringify({
       title: paletteName,
-      color1: randomColor1,
-      color2: randomColor2,
-      color3: randomColor3,
-      color4: randomColor4,
-      color5: randomColor5,
+      color1: colorArray[0],
+      color2: colorArray[1],
+      color3: colorArray[2],
+      color4: colorArray[3],
+      color5: colorArray[4],
       project_id
     }),
     headers: {
@@ -81,15 +40,27 @@ const savePalette = async () => {
     }
   })
   const paletteResponse = await response.json()
+  return await paletteResponse
+}
+
+const savePalette =  async () => {
+  const paletteName = ($('.palette-name-input').val())
+
+  const project_id = ($('.project-options').val())
+  const paletteResponse = await addPalette(paletteName, project_id)
+  console.log('paletteResponse', paletteResponse)
   const paletteID = paletteResponse.id
   $(`#${project_id}`).after(
-  `<article class="palette-list">
-    <p>${paletteName}</p>
-    <div class="palette-swatch" style='background-color:${randomColor1}''></div>
-    <div class="palette-swatch" style='background-color:${randomColor2}''></div>
-    <div class="palette-swatch" style='background-color:${randomColor3}''></div>
-    <div class="palette-swatch" style='background-color:${randomColor4}''></div>
-    <div class="palette-swatch" style='background-color:${randomColor5}''></div>
+  `<article class="palette-list" id=${paletteID}>
+    <p>
+      ${paletteName}
+      <img src="./css/images/trash.svg" class="delete-button">
+    </p>
+    <div class="palette-swatch swatchColor1" style='background-color:${colorArray[0]}'></div>
+    <div class="palette-swatch swatchColor2" style='background-color:${colorArray[1]}'></div>
+    <div class="palette-swatch swatchColor3" style='background-color:${colorArray[2]}'></div>
+    <div class="palette-swatch swatchColor4" style='background-color:${colorArray[3]}'></div>
+    <div class="palette-swatch swatchColor5" style='background-color:${colorArray[4]}'></div>
   </article>`)
 }
 
@@ -163,13 +134,16 @@ const showProjects = (projectArray) => {
       $('.project-list').append(`<h4 id="${project.id}">${project.title}</h4>`)
       project.colors.forEach(palette =>   
       $('.project-list').append(
-        `<article class="palette-list">
-          <p>${palette.title}</p>
-          <div class="palette-swatch" style='background-color:${palette.color1}''></div>
-          <div class="palette-swatch" style='background-color:${palette.color2}''></div>
-          <div class="palette-swatch" style='background-color:${palette.color3}''></div>
-          <div class="palette-swatch" style='background-color:${palette.color4}''></div>
-          <div class="palette-swatch" style='background-color:${palette.color5}''></div>
+        `<article class="palette-list" id=${palette.id}>
+          <p>
+            ${palette.title}
+            <img src="./css/images/trash.svg" class="delete-button">
+          </p>
+          <div class="palette-swatch swatchColor1" id='${palette.color1}' style='background-color:${palette.color1}''></div>
+          <div class="palette-swatch swatchColor2" id='${palette.color2}' style='background-color:${palette.color2}''></div>
+          <div class="palette-swatch swatchColor3" id='${palette.color3}' style='background-color:${palette.color3}''></div>
+          <div class="palette-swatch swatchColor4" id='${palette.color4}' style='background-color:${palette.color4}''></div>
+          <div class="palette-swatch swatchColor5" id='${palette.color5}' style='background-color:${palette.color5}''></div>
         </article>`))
     } else {
       $('.project-list').append(`<h4>${project.title}</h4>
@@ -192,12 +166,46 @@ const loadProjects = async () => {
   }
 }
 
+const displaySavedPalette = (event) => {
+  const palette = (event.target.closest('article'))
+  const color1 = ($(palette).find('.swatchColor1').attr('id'))
+  const color2 = ($(palette).find('.swatchColor2').attr('id'))
+  const color3 = ($(palette).find('.swatchColor3').attr('id'))
+  const color4 = ($(palette).find('.swatchColor4').attr('id'))
+  const color5 = ($(palette).find('.swatchColor5').attr('id'))
+
+  let colorArray = [color1, color2, color3, color4, color5]
+
+  colorArray.forEach((color, i) => {
+    $(`.box${i + 1}`).css('background-color', color)
+    $(`.color${i + 1}`).text(color)
+  })
+}
+
+const deletePalette = (event) => {
+  const imgToDelete = (event.target.closest('img'))
+  const articleToDelete = $(imgToDelete).closest('article')
+  const idToDelete = $(articleToDelete).attr('id')
+  $(articleToDelete).remove()
+  try {
+    fetch(`/api/v1/palettes/${idToDelete}`, {
+      method: 'DELETE'
+    })
+  } catch (error) {
+    console.log('Unable to delete:', error)
+  }
+}
+
 loadProjects()
+randomColorGenerator()
 $('.new-palette-button').click(randomColorGenerator)
-$('.drop-shadow1').click(() => handleLock(1))
-$('.drop-shadow2').click(() => handleLock(2))
-$('.drop-shadow3').click(() => handleLock(3))
-$('.drop-shadow4').click(() => handleLock(4))
-$('.drop-shadow5').click(() => handleLock(5))
+$('.lock-button1').click(() => handleLock(1))
+$('.lock-button2').click(() => handleLock(2))
+$('.lock-button3').click(() => handleLock(3))
+$('.lock-button4').click(() => handleLock(4))
+$('.lock-button5').click(() => handleLock(5))
 $('.save-palette-button').click(savePalette)
 $('.save-project-button').click(saveProject)
+$(this).click(() => displaySavedPalette(event))
+$(this).click(() => deletePalette(event))
+

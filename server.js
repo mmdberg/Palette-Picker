@@ -11,18 +11,11 @@ app.use(express.static('public'))
 
 app.set('port', process.env.PORT || 3000);
 
-// app.use((request, response, next) => {
-//   response.header('Access-Control-Allow-Origin', '*')
-//   next()
-// })
-
 app.locals.title = 'Palette Picker'
 
 app.get('/', (request, response) => {
 })
 
-
-//get all projects
 app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
     .then((projects) => {
@@ -33,10 +26,8 @@ app.get('/api/v1/projects', (request, response) => {
     })
 })
 
-//get palettes for projects
 app.get('/api/v1/palettes/:id', (request, response) => {
   const id = parseInt(request.params.id)
-  console.log(id);
   database('palettes').where('project_id', id).select()
     .then(palettes => {
       if(palettes.length) {
@@ -52,12 +43,10 @@ app.get('/api/v1/palettes/:id', (request, response) => {
     }) 
 })
 
-//post new project name
 app.post('/api/v1/projects', (request, response) => {
   const project = request.body;
-  console.log(project)
 
-  if (!project) {
+  if (!project.title) {
     return response.status(422).send({
       error: 'No project name provided'
     })
@@ -72,19 +61,17 @@ app.post('/api/v1/projects', (request, response) => {
   } 
 })
 
-//post new palette to project
 app.post('/api/v1/palettes', (request, response) => {
   const palette = request.body;
-  console.log(palette)
 
-  if(!palette) {
+  if(!palette.title) {
     return response.status(422).send({
       error: 'No palette name provided'
     })
   } else {
     database('palettes').insert(palette, 'id')
       .then(palette => {
-        response.status(200).json({ id: palette[0] })
+        response.status(200).json({ id: palette[0]})
       })
       .catch(error => {
         response.status(500).json({ error })
@@ -92,9 +79,16 @@ app.post('/api/v1/palettes', (request, response) => {
   }
 })
 
+app.delete('/api/v1/palettes/:id', (request, response) => {
+  database('palettes').where('id', request.params.id).del()
+    .then(id => response.sendStatus(204))
+    .catch(error => 
+      response.status(500).json({ error }))
+})
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}`)
 })
 
-
+module.exports = {app, database};
 
