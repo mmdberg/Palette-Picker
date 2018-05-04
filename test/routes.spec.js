@@ -1,20 +1,43 @@
 const chai = require('chai');
 const should = chai.should();
-const server = require('../server.js');
+const { app, database } = require('../server.js');
 const chaiHttp = require('chai-http');
+// const knex = require('../knexfile')
 
 chai.use(chaiHttp);
 
 describe('Endpoint tests', () => {
+
+  beforeEach((done) => {
+    database.migrate.rollback()
+      .then(() => {
+      database.migrate.latest()
+      .then(() => {
+        return database.seed.run()
+      .then(() => {done()})
+      })
+    })
+  })
+
+  it('should return 404 for a nonexistent route', (done) => {
+    chai.request(app)
+      .get('/boooop')
+      .end((error, response) => {
+        response.should.have.status(404);
+        done()
+      })
+  });
+
   it('should GET all the projects', (done) => {
-    chai.request(server)
+    chai.request(app)
       .get('/api/v1/projects')
       .end((error, response) => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.an('array');
         response.body.length.should.equal(1);
-        response.body[0].should.have.property('id');
+        response.body[0].should.have.property('id'); 
+        response.body[0].id.should.equal(1);    
         response.body[0].should.have.property('title');
         response.body[0].title.should.equal('Warm Tones');
         done();
@@ -22,14 +45,15 @@ describe('Endpoint tests', () => {
   });
 
   it('should GET all the palettes', (done) => {
-    chai.request(server)
-      .get('/api/v1/palettes/2')
+    chai.request(app)
+      .get('/api/v1/palettes/1')
       .end((error, response) => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.an('array');
         response.body.length.should.equal(2);
-        response.body[0].should.have.property('id');
+        response.body[0].should.have.property('id');  
+        response.body[0].id.should.equal(1);    
         response.body[0].should.have.property('title');
         response.body[0].title.should.equal('summer');
         response.body[0].should.have.property('color1');
@@ -43,17 +67,81 @@ describe('Endpoint tests', () => {
         response.body[0].should.have.property('color5');
         response.body[0].color5.should.equal('purple');   
         response.body[0].should.have.property('project_id');
-        response.body[0].project_id.should.equal(2);      
+        response.body[0].project_id.should.equal(1);      
         done();
       })
   });
 
-    it('should GET all the palettes', (done) => {
-    chai.request(server)
-      .post('/api/v1/palettes/2')
-      .end((error, response) => {   
+  it('should POST a project', (done) => {
+    chai.request(app)
+      .post('/api/v1/projects')
+      .send({
+        title: 'Cool Tones'
+      })
+      .end((error, response) => { 
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('object');  
+        response.body.should.have.property('id');
+        response.body.id.should.equal(2);
+        done();
+      });
+  });
+
+  it('should not POST a project without data', (done) => {
+    chai.request(app)
+      .post('/api/v1/projects')
+      .end((error, response) => {
+        response.should.have.status(422);
+        response.body.should.have.property('error');
+        response.body.error.should.equal('No project name provided');
+        done()
+      })
+  })
+
+  it('should POST a palette', (done) => {
+    chai.request(app)
+      .post('/api/v1/palettes')
+      .send({
+        id: 3,
+        title: 'Nature',
+        color1: 'blue',
+        color2: 'orange',
+        color3: 'green',
+        color4: 'gold',
+        color5: 'magenta',
+        project_id: 1
+      })
+      .end((error, response) => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.have.property('id');
+        response.body.id.should.equal(3);
+        done();
+      });
+  });
+
+  it('should not POST a palette without data', (done) => {
+    chai.request(app)
+      .post('/api/v1/palettes')
+      .end((error, response) => {
+        response.should.have.status(422);
+        response.body.should.have.property('error');
+        response.body.error.should.equal('No palette name provided');
         done();
       })
+  })
+
+  it('should DELETE a palette', (done) => {
+    chai.request(app)
+      .delete('/api/v1/palettes/1')
+      .end((error, response) => {
+        response.should.have.status(204);
+        done();
+      });
   });
+
+
+
 });
 
