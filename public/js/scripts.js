@@ -45,10 +45,9 @@ const addPalette = async (paletteName, project_id) => {
 
 const savePalette =  async () => {
   const paletteName = ($('.palette-name-input').val())
-
   const project_id = ($('.project-options').val())
+  $(`.no-palettes${project_id}`).remove();
   const paletteResponse = await addPalette(paletteName, project_id)
-  console.log('paletteResponse', paletteResponse)
   const paletteID = paletteResponse.id
   $(`#${project_id}`).after(
   `<article class="palette-list" id=${paletteID}>
@@ -77,8 +76,8 @@ const addProject = async (projectName) => {
     })
     const projectResponse = await response.json()
     const projectID = projectResponse.id
-    $('.project-list').append(`<h4>${projectName}</h4>
-      <p class="no-palettes-saved">No palattes saved for this project<p>`)
+    $('.project-list').append(`<h4 id="${projectID}">${projectName}</h4>
+      <p class="no-palettes-saved no-palettes${projectID}">No palattes saved for this project<p>`)
     $('.project-options').append(`<option value="${projectID}">${projectName}</option>`)
   } catch (error) {
     console.log('add project to db error:', error)
@@ -130,7 +129,7 @@ const makeDropdown = (projectArray) => {
 
 const showProjects = (projectArray) => {
   projectArray.forEach(project => {
-    if (project.colors.length > 1) { 
+    if (project.colors.length > 0) { 
       $('.project-list').append(`<h4 id="${project.id}">${project.title}</h4>`)
       project.colors.forEach(palette =>   
       $('.project-list').append(
@@ -146,8 +145,8 @@ const showProjects = (projectArray) => {
           <div class="palette-swatch swatchColor5" id='${palette.color5}' style='background-color:${palette.color5}''></div>
         </article>`))
     } else {
-      $('.project-list').append(`<h4>${project.title}</h4>
-        <p class="no-palettes-saved">No palattes saved for this project<p>`)
+      $('.project-list').append(`<h4 id="${project.id}">${project.title}</h4>
+        <p class="no-palettes-saved no-palettes${project.id}">No palattes saved for this project<p>`)
     }
   })
 }
@@ -157,7 +156,6 @@ const loadProjects = async () => {
     const response = await fetch('/api/v1/projects')
     const projects = await response.json()
     const projectArray = await makeArray(projects)
-    console.log('projectArray', projectArray);
     makeDropdown(projectArray)
     showProjects(projectArray)
     return projectArray
