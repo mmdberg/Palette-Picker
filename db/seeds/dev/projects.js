@@ -1,6 +1,5 @@
 
 exports.seed = function(knex, Promise) {
-  // Deletes ALL existing entries
   return knex('palettes').del()
     .then(() => knex('projects').del())
     .then(() => {

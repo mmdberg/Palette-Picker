@@ -2,7 +2,6 @@ const chai = require('chai');
 const should = chai.should();
 const { app, database } = require('../server.js');
 const chaiHttp = require('chai-http');
-// const knex = require('../knexfile')
 
 chai.use(chaiHttp);
 
@@ -140,8 +139,5 @@ describe('Endpoint tests', () => {
         done();
       });
   });
-
-
-
 });
 

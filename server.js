@@ -16,7 +16,6 @@ app.locals.title = 'Palette Picker'
 app.get('/', (request, response) => {
 })
 
-//get all projects
 app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
     .then((projects) => {
@@ -27,7 +26,6 @@ app.get('/api/v1/projects', (request, response) => {
     })
 })
 
-//get palettes for projects
 app.get('/api/v1/palettes/:id', (request, response) => {
   const id = parseInt(request.params.id)
   database('palettes').where('project_id', id).select()
@@ -45,7 +43,6 @@ app.get('/api/v1/palettes/:id', (request, response) => {
     }) 
 })
 
-//post new project name
 app.post('/api/v1/projects', (request, response) => {
   const project = request.body;
 
@@ -64,7 +61,6 @@ app.post('/api/v1/projects', (request, response) => {
   } 
 })
 
-//post new palette to project
 app.post('/api/v1/palettes', (request, response) => {
   const palette = request.body;
 
@@ -95,6 +91,4 @@ app.listen(app.get('port'), () => {
 })
 
 module.exports = {app, database};
-
-
 
